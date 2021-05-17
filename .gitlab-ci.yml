@@ -3,6 +3,7 @@ image: openjdk:11
 stages:
   - build
   - test
+  - coverage
 
 build:
   stage: build
@@ -19,3 +20,18 @@ test:
   artifacts:
     paths:
       - build/test-results/test/TEST*.xml
+
+coverage:
+  image: adoptopenjdk:11
+  needs:
+    - build
+    - test
+  stage: coverage
+  script:
+    - ./gradlew jacocoTestReport
+    - ./gradlew jacocoTestCoverageVerification
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - build/reports/jacoco/
