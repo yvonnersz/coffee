@@ -16,4 +16,8 @@ public class CoffeeList {
     public void setCoffees(List<Coffee> coffees) {
         this.coffees = coffees;
     }
+
+    public boolean isEmpty() {
+        return coffees.isEmpty();
+    }
 }

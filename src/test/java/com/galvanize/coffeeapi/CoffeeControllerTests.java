@@ -45,4 +45,20 @@ public class CoffeeControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.coffees", hasSize(3)));
     }
+
+    @Test
+    void getCoffees_noParams_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffees()).thenReturn(new CoffeeList(new ArrayList<>()));
+
+        mockMvc.perform(get("/coffees"))
+                .andExpect(status().isNoContent());
+    }
+
+
+//    @Test
+//    void getCoffees_byNameAndLactoseFree() {
+//        Coffee coffee = coffees.get(0);
+//        mockMvc.perform(get("/coffees?name=" + coffee.getName() + "&lactosefree=" + coffee.isLactoseFree()))
+//                .andExpect(status().isOk())
+//    }
 }
