@@ -69,4 +69,4 @@ production:
     - gem install dpl
     - dpl --provider=heroku --app=coffees-api --api-key=$HEROKU_API
   only:
-    - main
+    - master
