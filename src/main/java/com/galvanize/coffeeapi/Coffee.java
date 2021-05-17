@@ -5,13 +5,13 @@ import java.util.List;
 public class Coffee {
     private String name;
     private double price;
-    private boolean lactoseFree;
+    private boolean dairy;
     private List<String> ingredients;
 
-    public Coffee(String name, double price, boolean lactoseFree) {
+    public Coffee(String name, double price, boolean dairy) {
         this.name = name;
         this.price = price;
-        this.lactoseFree = lactoseFree;
+        this.dairy = dairy;
     }
 
     public String getName() {
@@ -30,12 +30,12 @@ public class Coffee {
         this.price = price;
     }
 
-    public boolean isLactoseFree() {
-        return lactoseFree;
+    public boolean isDairy() {
+        return dairy;
     }
 
-    public void setLactoseFree(boolean lactoseFree) {
-        this.lactoseFree = lactoseFree;
+    public void setDairy(boolean dairy) {
+        this.dairy = dairy;
     }
 
     public List<String> getIngredients() {
