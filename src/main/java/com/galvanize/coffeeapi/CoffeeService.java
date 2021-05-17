@@ -11,7 +11,7 @@ public class CoffeeService {
     }
 
     public CoffeeList getCoffees() {
-        return null;
+        return new CoffeeList(coffeeRepository.findAll());
     }
 
     public CoffeeList getCoffees(String name, String lactoseFree) {
