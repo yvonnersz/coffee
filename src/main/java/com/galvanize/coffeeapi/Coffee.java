@@ -12,12 +12,12 @@ public class Coffee {
     private Long id;
     private String name;
     private double price;
-    private boolean dairy;
+    private String dairy;
 //    private List<String> ingredients;
 
     public Coffee() {}
 
-    public Coffee(String name, double price, boolean dairy) {
+    public Coffee(String name, double price, String dairy) {
         this.name = name;
         this.price = price;
         this.dairy = dairy;
@@ -39,11 +39,11 @@ public class Coffee {
         this.price = price;
     }
 
-    public boolean isDairy() {
+    public String getDairy() {
         return dairy;
     }
 
-    public void setDairy(boolean dairy) {
+    public void setDairy(String dairy) {
         this.dairy = dairy;
     }
 

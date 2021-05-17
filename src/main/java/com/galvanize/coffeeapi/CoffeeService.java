@@ -17,7 +17,7 @@ public class CoffeeService {
     public CoffeeList getCoffees(String name, String dairy) {
         if (name == null) name = "";
         if (dairy == null) dairy = "";
-        return new CoffeeList(coffeeRepository.findByNameContainsAndDairyContains(name + "%", Boolean.parseBoolean(dairy)));
+        return new CoffeeList(coffeeRepository.findByNameContainsAndDairyContains(name + "%", dairy + "%"));
     }
 
     public Coffee addCoffee(Coffee coffee) {

@@ -32,7 +32,7 @@ public class CoffeeServiceTests {
         coffees = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            Coffee coffee = new Coffee("Latte" + i, 4.25, true);
+            Coffee coffee = new Coffee("Latte" + i, 4.25, "true");
             coffees.add(coffee);
         }
     }
@@ -60,8 +60,8 @@ public class CoffeeServiceTests {
     void getCoffee_withNameAndDairy_returnsMatchingCoffees() {
         Coffee coffee = coffees.get(0);
 
-        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyBoolean())).thenReturn(Arrays.asList(coffee));
-        CoffeeList actual = coffeeService.getCoffees(coffee.getName(), Boolean.toString(coffee.isDairy()));
+        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyString())).thenReturn(Arrays.asList(coffee));
+        CoffeeList actual = coffeeService.getCoffees(coffee.getName(), coffee.getDairy());
 
         assertNotNull(actual);
         assertFalse(actual.isEmpty());
@@ -70,7 +70,7 @@ public class CoffeeServiceTests {
 
     @Test
     void getCoffee_withNameAndDairy_returnsNoContent() {
-        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyBoolean())).thenReturn(new ArrayList<>());
+        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyString())).thenReturn(new ArrayList<>());
         CoffeeList actual = coffeeService.getCoffees("noMatchingCoffee", Boolean.toString(true));
 
         assertNotNull(actual);

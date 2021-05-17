@@ -41,7 +41,7 @@ class CoffeeApiApplicationTests {
 		String[] coffeeNames = {"Latte", "Cappuccino", "ColdBrew"};
 
 		for (int i = 0; i < 3; i++) {
-			Coffee coffee = new Coffee(coffeeNames[i], 4.25, true);
+			Coffee coffee = new Coffee(coffeeNames[i], 4.25, "true");
 			coffees.add(coffee);
 		}
 
@@ -80,11 +80,11 @@ class CoffeeApiApplicationTests {
 	@Test
 	void getCoffees_withQueries_returnsMatchingCoffee() {
 		Coffee coffee = coffees.get(0);
-		String uri = "/coffees?name=" + coffee.getName() + "&dairy=" + coffee.isDairy();
+		String uri = "/coffees?name=" + coffee.getName() + "&dairy=" + coffee.getDairy();
 
 		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
 
-		List<Coffee> filteredCoffees = filterCoffee(coffee.getName(), coffee.isDairy());
+		List<Coffee> filteredCoffees = filterCoffee(coffee.getName(), coffee.getDairy());
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -98,7 +98,58 @@ class CoffeeApiApplicationTests {
 
 		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
 
-		List<Coffee> filteredCoffees = filterCoffee(coffee.getName(), coffee.isDairy());
+		List<Coffee> filteredCoffees = filterCoffee(coffee.getName(), coffee.getDairy());
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	}
+
+	@Test
+	void getCoffee_withName_returnsMatchingCoffee() {
+		Coffee coffee = coffees.get(0);
+		String uri = "/coffees?name=" + coffee.getName();
+
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
+
+		List<Coffee> filteredCoffees = filterCoffeeByName(coffee.getName());
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void getCoffee_withName_returnsNoContent() {
+		String uri = "/coffees?name=noMatchingCoffee";
+
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
+
+		List<Coffee> filteredCoffees = filterCoffeeByName("noMatchingCoffee");
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	}
+
+	@Test
+	void getCoffee_withDairy_returnsMatchingCoffee() {
+		Coffee coffee = coffees.get(0);
+		String uri = "/coffees?dairy=" + coffee.getDairy();
+
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
+
+		List<Coffee> filteredCoffees = filterCoffeeByName(coffee.getDairy());
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void getCoffee_withDairy_returnsNoContent() {
+		Coffee coffee = coffees.get(0);
+		String uri = "/coffees?dairy=notValidDairyInput";
+
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity(uri, CoffeeList.class);
+
+		List<Coffee> filteredCoffees = filterCoffeeByName("notValidDairyInput");
 
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -106,7 +157,7 @@ class CoffeeApiApplicationTests {
 
 	@Test
 	void addCoffee_withCoffeeParams_returnsNewlyAddedCoffee() {
-		Coffee coffee = new Coffee("Frappuccino", 3.20, true);
+		Coffee coffee = new Coffee("Frappuccino", 3.20, "true");
 		String uri = "/coffees";
 
 		ResponseEntity<Coffee> response = restTemplate.postForEntity(uri, coffee, Coffee.class);
@@ -181,7 +232,7 @@ class CoffeeApiApplicationTests {
 
 	@Test
 	void deleteCoffee_notSuccessful() {
-		Coffee coffee = new Coffee("Strawberry", 2.46, false);
+		Coffee coffee = new Coffee("Strawberry", 2.46, "false");
 		ResponseEntity<CoffeeList> response = restTemplate.getForEntity("/coffees", CoffeeList.class);
 
 		assertNotNull(response);
@@ -195,11 +246,23 @@ class CoffeeApiApplicationTests {
 		assertEquals(coffees.size(), response.getBody().getCoffees().size());
 	}
 
-	public List<Coffee> filterCoffee(String name, boolean dairy) {
+	public List<Coffee> filterCoffee(String name, String dairy) {
 		List<Coffee> filteredCoffees = new ArrayList<>();
 
 		for(Coffee coffee : coffees) {
-			if (coffee.getName() == name && coffee.isDairy() == dairy) {
+			if (coffee.getName() == name && coffee.getDairy() == dairy) {
+				filteredCoffees.add(coffee);
+			}
+		}
+
+		return filteredCoffees;
+	}
+
+	public List<Coffee> filterCoffeeByName(String name) {
+		List<Coffee> filteredCoffees = new ArrayList<>();
+
+		for(Coffee coffee : coffees) {
+			if (coffee.getName() == name) {
 				filteredCoffees.add(coffee);
 			}
 		}

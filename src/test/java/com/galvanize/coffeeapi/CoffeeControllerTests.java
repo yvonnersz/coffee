@@ -37,7 +37,7 @@ public class CoffeeControllerTests {
         coffees = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            Coffee coffee = new Coffee("Latte " + i, 4.25, false);
+            Coffee coffee = new Coffee("Latte " + i, 4.25, "false");
             coffees.add(coffee);
         }
     }
@@ -64,7 +64,7 @@ public class CoffeeControllerTests {
         Coffee coffee = coffees.get(0);
 
         when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(Arrays.asList(coffee)));
-        mockMvc.perform(get("/coffees?name=" + coffee.getName() + "&dairy=" + coffee.isDairy()))
+        mockMvc.perform(get("/coffees?name=" + coffee.getName() + "&dairy=" + coffee.getDairy()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.coffees", hasSize(1)));
     }
