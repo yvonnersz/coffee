@@ -12,8 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +32,7 @@ public class CoffeeServiceTests {
         coffees = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            Coffee coffee = new Coffee("Latte" + i, 4.25, true);
+            Coffee coffee = new Coffee("Latte" + i, 4.25, "true");
             coffees.add(coffee);
         }
     }
@@ -62,7 +61,7 @@ public class CoffeeServiceTests {
         Coffee coffee = coffees.get(0);
 
         when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyString())).thenReturn(Arrays.asList(coffee));
-        CoffeeList actual = coffeeService.getCoffees(coffee.getName(), Boolean.toString(coffee.isDairy()));
+        CoffeeList actual = coffeeService.getCoffees(coffee.getName(), coffee.getDairy());
 
         assertNotNull(actual);
         assertFalse(actual.isEmpty());
