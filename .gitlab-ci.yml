@@ -16,6 +16,8 @@ build:
 
 test:
   image: adoptopenjdk:11
+  needs:
+    - build
   stage: test
   script:
     ./gradlew test
