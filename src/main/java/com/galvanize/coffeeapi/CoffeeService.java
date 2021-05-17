@@ -26,7 +26,14 @@ public class CoffeeService {
         return coffeeRepository.findByNameContains(name);
     }
 
-    public Coffee updateCoffee(Coffee coffee, String name, String price) {
+    public Coffee updateCoffee(String name, String price) {
+        Coffee coffee = coffeeRepository.findByNameContains(name);
+
+        if (coffee != null) {
+            coffee.setPrice(Double.parseDouble(price));
+            return coffeeRepository.save(coffee);
+        }
+
         return null;
     }
 

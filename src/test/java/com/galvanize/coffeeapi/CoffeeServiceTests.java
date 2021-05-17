@@ -106,4 +106,28 @@ public class CoffeeServiceTests {
 
         assertNull(actual);
     }
+
+    @Test
+    void updateCoffee_withParams_returnsUpdatedCoffee() {
+        Coffee coffee = coffees.get(0);
+        coffee.setPrice(5.25);
+
+        when(coffeeRepository.findByNameContains(anyString())).thenReturn(coffee);
+        when(coffeeRepository.save(any(Coffee.class))).thenReturn(coffee);
+
+
+        Coffee actual = coffeeService.updateCoffee(coffee.getName(), "5.25");
+
+        assertNotNull(actual);
+        assertEquals(coffee, actual);
+    }
+
+    @Test
+    void updateCoffee_withParams_returnsNull() {
+        when(coffeeRepository.findByNameContains(anyString())).thenReturn(null);
+
+        Coffee actual = coffeeService.updateCoffee("noMatchingCoffee", "5.25");
+
+        assertNull(actual);
+    }
 }

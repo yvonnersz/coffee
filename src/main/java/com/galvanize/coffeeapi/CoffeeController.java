@@ -59,7 +59,7 @@ public class CoffeeController {
         if (coffee == null) {
             return ResponseEntity.noContent().build();
         } else {
-            coffee = coffeeService.updateCoffee(coffee, request.getName(), request.getPrice());
+            coffee = coffeeService.updateCoffee(request.getName(), request.getPrice());
             return ResponseEntity.ok(coffee);
         }
     }
