@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +94,40 @@ class CoffeeApiApplicationTests {
 		assertNotNull(response);
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	}
+
+	@Test
+	void addCoffee_withCoffeeParams_returnsNewlyAddedCoffee() {
+		Coffee coffee = new Coffee("Frappuccino", 3.20, true);
+		String uri = "/coffees";
+
+		ResponseEntity<Coffee> response = restTemplate.postForEntity(uri, coffee, Coffee.class);
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(coffee.getName(), response.getBody().getName());
+	}
+
+	@Test
+	void addCoffee_withCoffeeParams_returnsBadRequest() {
+		String uri = "/coffees";
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<?> request = new HttpEntity<>("", headers);
+
+		ResponseEntity<Coffee> response = restTemplate.postForEntity(uri, request, Coffee.class);
+
+		assertNotNull(response);
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+
+
+
+
+
+
+
+
 
 
 
