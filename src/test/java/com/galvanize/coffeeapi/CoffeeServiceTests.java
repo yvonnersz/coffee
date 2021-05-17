@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -74,5 +75,35 @@ public class CoffeeServiceTests {
 
         assertNotNull(actual);
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void addCoffee_withCoffeeParams_returnsAddedCoffee() {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeRepository.save(any(Coffee.class))).thenReturn(coffee);
+        Coffee actual = coffeeService.addCoffee(coffee);
+
+        assertNotNull(actual);
+        assertEquals(coffee, actual);
+    }
+
+    @Test
+    void getCoffee_withName_returnsMatchingCoffee() {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeRepository.findByNameContains(anyString())).thenReturn(coffee);
+        Coffee actual = coffeeService.getCoffee(coffee.getName());
+
+        assertNotNull(actual);
+        assertEquals(coffee, actual);
+    }
+
+    @Test
+    void getCoffee_withName_returnsNoContent() {
+        when(coffeeRepository.findByNameContains(anyString())).thenReturn(null);
+        Coffee actual = coffeeService.getCoffee("noMatchingCoffee");
+
+        assertNull(actual);
     }
 }

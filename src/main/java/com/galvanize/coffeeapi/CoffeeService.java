@@ -19,11 +19,11 @@ public class CoffeeService {
     }
 
     public Coffee addCoffee(Coffee coffee) {
-        return null;
+        return coffeeRepository.save(coffee);
     }
 
     public Coffee getCoffee(String name) {
-        return null;
+        return coffeeRepository.findByNameContains(name);
     }
 
     public Coffee updateCoffee(Coffee coffee, String name, String price) {
