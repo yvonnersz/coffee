@@ -56,12 +56,53 @@ public class CoffeeControllerTests {
     }
 
     @Test
-    void getCoffees_byNameAndDairy() throws Exception {
+    void getCoffees_byNameAndDairy_returnsMatchingCoffees() throws Exception {
         Coffee coffee = coffees.get(0);
 
         when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(Arrays.asList(coffee)));
         mockMvc.perform(get("/coffees?name=" + coffee.getName() + "&dairy=" + coffee.isDairy()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.coffees", hasSize(1)));
+    }
+
+    @Test
+    void getCoffees_byNameAndDairy_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(new ArrayList<>()));
+        mockMvc.perform(get("/coffees?name=noMatchingCoffee&dairy=false"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getCoffees_byName_returnsMatchingCoffees() throws Exception {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(Arrays.asList(coffee)));
+        mockMvc.perform(get("/coffees?name=noMatchingCoffee"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.coffees", hasSize(1)));
+    }
+
+    @Test
+    void getCoffees_byName_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(new ArrayList<>()));
+        mockMvc.perform(get("/coffees?name=noMatchingCoffee"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getCoffees_byDairy_returnsMatchingCoffees() throws Exception {
+        when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(coffees));
+
+        mockMvc.perform(get("/coffees?dairy=false"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.coffees", hasSize(3)));
+    }
+
+    @Test
+    void getCoffees_byDairy_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffees(anyString(), anyString())).thenReturn(new CoffeeList(new ArrayList<>()));
+
+        mockMvc.perform(get("/coffees?dairy=true"))
+                .andExpect(status().isNoContent());
     }
 }

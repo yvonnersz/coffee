@@ -21,6 +21,8 @@ public class CoffeeController {
         if (name == null && dairy == null) {
             coffees = coffeeService.getCoffees();
         } else {
+            if (name == null) name = "";
+            if (dairy == null) dairy = "";
             coffees = coffeeService.getCoffees(name, dairy);
         }
 
