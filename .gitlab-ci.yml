@@ -3,6 +3,7 @@ stages:
   - test
   - coverage
   - docker
+  - heroku
 
 build:
   image: adoptopenjdk:11
@@ -15,6 +16,8 @@ build:
 
 test:
   image: adoptopenjdk:11
+  needs:
+    - build
   stage: test
   script:
     ./gradlew test
@@ -53,3 +56,17 @@ docker:
     - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
     - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
     - docker push "$CI_REGISTRY_IMAGE":"latest"
+
+heroku:
+  image: ruby:latest
+  needs:
+    - build
+    - test
+  stage: heroku
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=coffees-api --api-key=$HEROKU_API
+  only:
+    - main
