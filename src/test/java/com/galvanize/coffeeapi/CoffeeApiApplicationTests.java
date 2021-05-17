@@ -1,5 +1,7 @@
 package com.galvanize.coffeeapi;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,19 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CoffeeApiApplicationTests {
 
 	@Autowired
 	TestRestTemplate restTemplate;
+	RestTemplate patchRestTemplate;
 
 	@Autowired
 	CoffeeRepository coffeeRepository;
@@ -28,6 +33,10 @@ class CoffeeApiApplicationTests {
 
 	@BeforeEach
 	void setUp() {
+		this.patchRestTemplate = restTemplate.getRestTemplate();
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		this.patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
 		coffees = new ArrayList<>();
 		String[] coffeeNames = {"Latte", "Cappuccino", "ColdBrew"};
 
@@ -121,7 +130,37 @@ class CoffeeApiApplicationTests {
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
 
+	@Test
+	void updateCoffee_withParams_returnsUpdatedCoffee() {
+		Coffee coffee = coffees.get(0);
+		String uri = "/coffees/" + coffee.getName();
+		String body = "{\"price\": \"4.25\"}";
 
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<?> request = new HttpEntity<>(body, headers);
+
+		ResponseEntity<Coffee> response = patchRestTemplate.exchange(uri,
+				HttpMethod.PATCH, request, Coffee.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void updateCoffee_withParams_returnsBadRequest() {
+		Coffee coffee = coffees.get(0);
+		String uri = "/coffees/" + coffee.getName();
+		String body = "";
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<?> request = new HttpEntity<>(body, headers);
+
+		ResponseEntity<Coffee> response = patchRestTemplate.exchange(uri,
+				HttpMethod.PATCH, request, Coffee.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
 
 
 
