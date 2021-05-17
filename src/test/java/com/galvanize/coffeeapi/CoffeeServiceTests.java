@@ -135,7 +135,9 @@ public class CoffeeServiceTests {
     @Test
     void deleteCoffee_withCoffee_successful() {
         Coffee coffee = coffees.get(0);
-        coffeeService.delete(coffee);
+        when(coffeeRepository.findByNameContains(anyString())).thenReturn(coffee);
+
+        coffeeService.delete(coffee.getName());
 
         verify(coffeeRepository).delete(any(Coffee.class));
     }

@@ -15,7 +15,9 @@ public class CoffeeService {
     }
 
     public CoffeeList getCoffees(String name, String dairy) {
-        return new CoffeeList(coffeeRepository.findByNameContainsAndDairyContains(name, dairy));
+        if (name == null) name = "";
+        if (dairy == null) dairy = "";
+        return new CoffeeList(coffeeRepository.findByNameContainsAndDairyContains(name + "%", dairy + "%"));
     }
 
     public Coffee addCoffee(Coffee coffee) {
@@ -37,7 +39,9 @@ public class CoffeeService {
         return null;
     }
 
-    public void delete(Coffee coffee) {
+    public void delete(String name) {
+        Coffee coffee = coffeeRepository.findByNameContains(name);
+
         if (coffee != null) {
             coffeeRepository.delete(coffee);
         } else {

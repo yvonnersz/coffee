@@ -199,7 +199,7 @@ public class CoffeeControllerTests {
         mockMvc.perform(delete("/coffees/" + coffee.getName()))
                 .andExpect(status().isAccepted());
 
-        verify(coffeeService).delete(coffee);
+        verify(coffeeService).delete(coffee.getName());
     }
 
     @Test
