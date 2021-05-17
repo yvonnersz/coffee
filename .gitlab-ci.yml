@@ -1,11 +1,10 @@
-image: openjdk:11
-
 stages:
   - build
   - test
   - coverage
 
 build:
+  image: adoptopenjdk:11
   stage: build
   script:
     ./gradlew assemble
@@ -14,6 +13,7 @@ build:
       - build/libs/*.jar
 
 test:
+  image: adoptopenjdk:11
   stage: test
   script:
     ./gradlew test
