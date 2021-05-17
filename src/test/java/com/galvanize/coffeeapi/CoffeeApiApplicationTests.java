@@ -162,13 +162,38 @@ class CoffeeApiApplicationTests {
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
 
+	@Test
+	void deleteCoffee_successfulRequest() {
+		Coffee coffee = coffees.get(0);
 
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity("/coffees", CoffeeList.class);
 
+		assertNotNull(response);
+		assertEquals(coffees.size(), response.getBody().getCoffees().size());
 
+		coffeeRepository.delete(coffee);
 
+		ResponseEntity<CoffeeList> responseAfterDeletion = restTemplate.getForEntity("/coffees", CoffeeList.class);
 
+		assertNotNull(responseAfterDeletion);
+		assertEquals(coffees.size(), response.getBody().getCoffees().size());
+	}
 
+	@Test
+	void deleteCoffee_notSuccessful() {
+		Coffee coffee = new Coffee("Strawberry", 2.46, false);
+		ResponseEntity<CoffeeList> response = restTemplate.getForEntity("/coffees", CoffeeList.class);
 
+		assertNotNull(response);
+		assertEquals(coffees.size(), response.getBody().getCoffees().size());
+
+		coffeeRepository.delete(coffee);
+
+		ResponseEntity<CoffeeList> responseAfterDeletion = restTemplate.getForEntity("/coffees", CoffeeList.class);
+
+		assertNotNull(responseAfterDeletion);
+		assertEquals(coffees.size(), response.getBody().getCoffees().size());
+	}
 
 	public List<Coffee> filterCoffee(String name, boolean dairy) {
 		List<Coffee> filteredCoffees = new ArrayList<>();
