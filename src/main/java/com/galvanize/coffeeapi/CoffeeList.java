@@ -1,5 +1,7 @@
 package com.galvanize.coffeeapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class CoffeeList {
@@ -19,6 +21,7 @@ public class CoffeeList {
         this.coffees = coffees;
     }
 
+    @JsonIgnore
     public boolean isEmpty() {
         return coffees.isEmpty();
     }
