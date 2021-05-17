@@ -29,7 +29,7 @@ public class CoffeeService {
     }
 
     public Coffee updateCoffee(String name, String price) {
-        Coffee coffee = coffeeRepository.findByNameContains(name);
+        Coffee coffee = getCoffee(name);
 
         if (coffee != null) {
             coffee.setPrice(Double.parseDouble(price));

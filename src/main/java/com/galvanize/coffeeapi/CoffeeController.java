@@ -53,8 +53,8 @@ public class CoffeeController {
     }
 
     @PatchMapping("/coffees/{name}")
-    public ResponseEntity<Coffee> updateCoffee(@PathVariable String name, @RequestBody String price) {
-        Coffee coffee = coffeeService.updateCoffee(name, price);
+    public ResponseEntity<Coffee> updateCoffee(@PathVariable String name, @RequestBody UpdateCoffee request) {
+        Coffee coffee = coffeeService.updateCoffee(name, request.getPrice());
 
         if (coffee == null) {
             return ResponseEntity.noContent().build();

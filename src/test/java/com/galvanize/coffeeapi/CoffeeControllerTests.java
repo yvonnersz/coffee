@@ -163,7 +163,7 @@ public class CoffeeControllerTests {
         when(coffeeService.updateCoffee(anyString(), anyString())).thenReturn(coffee);
         mockMvc.perform(patch("/coffees/" + coffeeName)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+                .content("{\"price\": \"5.25\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("Cappuccino"))
                 .andExpect(jsonPath("price").value(5.25));
