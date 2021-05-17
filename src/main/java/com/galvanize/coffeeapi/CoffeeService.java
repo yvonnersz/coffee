@@ -16,4 +16,8 @@ public class CoffeeService {
     public Coffee getCoffee(String name) {
         return null;
     }
+
+    public Coffee updateCoffee(Coffee coffee, String name, String price) {
+        return null;
+    }
 }

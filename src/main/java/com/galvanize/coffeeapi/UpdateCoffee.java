@@ -4,6 +4,8 @@ public class UpdateCoffee {
     private String name;
     private String price;
 
+    public UpdateCoffee() {}
+
     public UpdateCoffee(String name, String price) {
         this.name = name;
         this.price = price;

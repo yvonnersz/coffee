@@ -151,14 +151,42 @@ public class CoffeeControllerTests {
                 .andExpect(status().isNoContent());
     }
 
-//    @Test
-//    void updateCoffee_withCoffeeName_returnsUpdatedCoffee() throws Exception {
-//        Coffee coffee = coffees.get(0);
-//
-//        mockMvc.perform(patch("/coffees/" + coffee.getName())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("name").value("Cappuccino"));
-//    }
+    @Test
+    void updateCoffee_withCoffeeName_returnsUpdatedCoffee() throws Exception {
+        Coffee coffee = coffees.get(0);
+        String coffeeName = coffee.getName();
+        coffee.setName("Cappuccino");
+        coffee.setPrice(5.25);
+
+        when(coffeeService.getCoffee(anyString())).thenReturn(coffee);
+        when(coffeeService.updateCoffee(any(Coffee.class), anyString(), anyString())).thenReturn(coffee);
+        mockMvc.perform(patch("/coffees/" + coffeeName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("Cappuccino"))
+                .andExpect(jsonPath("price").value(5.25));
+    }
+
+    @Test
+    void updateCoffee_withCoffeeName_returnsBadRequest() throws Exception {
+        Coffee coffee = coffees.get(0);
+        String coffeeName = coffee.getName();
+
+        when(coffeeService.updateCoffee(any(Coffee.class), anyString(), anyString())).thenThrow(InvalidCoffeeInput.class);
+        mockMvc.perform(patch("/coffees/" + coffeeName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateCoffee_withCoffeeName_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffee(anyString())).thenReturn(null);
+//        when(coffeeService.updateCoffee(any(Coffee.class), anyString(), anyString())).thenReturn(null);
+        mockMvc.perform(patch("/coffees/noMatchingCoffee")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+                .andExpect(status().isNoContent());
+    }
 }

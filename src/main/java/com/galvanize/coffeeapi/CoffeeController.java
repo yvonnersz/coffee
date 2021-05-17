@@ -52,8 +52,15 @@ public class CoffeeController {
         }
     }
 
-//    @PatchMapping("/coffees/{name}")
-//    public Coffee updateCoffee(@PathVariable String name, @RequestBody UpdateCoffee updateCoffee) {
-//        return coffeeService.updateCoffee();
-//    }
+    @PatchMapping("/coffees/{name}")
+    public ResponseEntity<Coffee> updateCoffee(@PathVariable String name, @RequestBody UpdateCoffee request) {
+        Coffee coffee = coffeeService.getCoffee(name);
+
+        if (coffee == null) {
+            return ResponseEntity.noContent().build();
+        } else {
+            coffee = coffeeService.updateCoffee(coffee, request.getName(), request.getPrice());
+            return ResponseEntity.ok(coffee);
+        }
+    }
 }
