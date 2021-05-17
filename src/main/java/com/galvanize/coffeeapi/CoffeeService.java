@@ -14,8 +14,8 @@ public class CoffeeService {
         return new CoffeeList(coffeeRepository.findAll());
     }
 
-    public CoffeeList getCoffees(String name, String lactoseFree) {
-        return null;
+    public CoffeeList getCoffees(String name, String dairy) {
+        return new CoffeeList(coffeeRepository.findByNameContainsAndDairyContains(name, dairy));
     }
 
     public Coffee addCoffee(Coffee coffee) {
