@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,6 +29,7 @@ public class CoffeeControllerTests {
     CoffeeService coffeeService;
 
     List<Coffee> coffees;
+    ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
@@ -105,4 +108,57 @@ public class CoffeeControllerTests {
         mockMvc.perform(get("/coffees?dairy=true"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void addCoffee_withParams_returnsAddedCoffee() throws Exception {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeService.addCoffee(any(Coffee.class))).thenReturn(coffee);
+
+        mockMvc.perform(post("/coffees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(coffee)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value(coffee.getName()));
+    }
+
+    @Test
+    void addCoffee_withBadParams_returnsBadRequest() throws Exception {
+        when(coffeeService.addCoffee(any(Coffee.class))).thenThrow(InvalidCoffeeInput.class);
+
+        mockMvc.perform(post("/coffees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getCoffee_byName_returnsMatchingCoffee() throws Exception {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeService.getCoffee(anyString())).thenReturn(coffee);
+
+        mockMvc.perform(get("/coffees/" + coffee.getName()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value(coffee.getName()));
+    }
+
+    @Test
+    void getCoffee_byName_returnsNoContent() throws Exception {
+        when(coffeeService.getCoffee(anyString())).thenReturn(null);
+
+        mockMvc.perform(get("/coffees/noMatchingCoffee"))
+                .andExpect(status().isNoContent());
+    }
+
+//    @Test
+//    void updateCoffee_withCoffeeName_returnsUpdatedCoffee() throws Exception {
+//        Coffee coffee = coffees.get(0);
+//
+//        mockMvc.perform(patch("/coffees/" + coffee.getName())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("name").value("Cappuccino"));
+//    }
 }

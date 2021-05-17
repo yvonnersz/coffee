@@ -8,4 +8,12 @@ public class CoffeeService {
     public CoffeeList getCoffees(String name, String lactoseFree) {
         return null;
     }
+
+    public Coffee addCoffee(Coffee coffee) {
+        return null;
+    }
+
+    public Coffee getCoffee(String name) {
+        return null;
+    }
 }

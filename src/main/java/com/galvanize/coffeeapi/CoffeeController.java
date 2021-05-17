@@ -1,9 +1,8 @@
 package com.galvanize.coffeeapi;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CoffeeController {
@@ -32,4 +31,29 @@ public class CoffeeController {
             return ResponseEntity.ok(coffees);
         }
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    void InvalidCoffeeInput(InvalidCoffeeInput e) {}
+
+    @PostMapping("/coffees")
+    public Coffee addCoffee(@RequestBody Coffee coffee) {
+        return coffeeService.addCoffee(coffee);
+    }
+
+    @GetMapping("/coffees/{name}")
+    public ResponseEntity<Coffee> getCoffee(@PathVariable String name) {
+        Coffee coffee = coffeeService.getCoffee(name);
+
+        if (coffee == null) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(coffee);
+        }
+    }
+
+//    @PatchMapping("/coffees/{name}")
+//    public Coffee updateCoffee(@PathVariable String name, @RequestBody UpdateCoffee updateCoffee) {
+//        return coffeeService.updateCoffee();
+//    }
 }

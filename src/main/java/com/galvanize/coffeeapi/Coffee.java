@@ -8,6 +8,8 @@ public class Coffee {
     private boolean dairy;
     private List<String> ingredients;
 
+    public Coffee() {}
+
     public Coffee(String name, double price, boolean dairy) {
         this.name = name;
         this.price = price;
