@@ -1,12 +1,19 @@
 package com.galvanize.coffeeapi;
 
-import java.util.List;
+import javax.persistence.*;
 
+
+@Entity
+@Table(name="coffees")
 public class Coffee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private double price;
     private boolean dairy;
-    private List<String> ingredients;
+//    private List<String> ingredients;
 
     public Coffee() {}
 
@@ -40,11 +47,19 @@ public class Coffee {
         this.dairy = dairy;
     }
 
-    public List<String> getIngredients() {
-        return ingredients;
+//    public List<String> getIngredients() {
+//        return ingredients;
+//    }
+//
+//    public void setIngredients(List<String> ingredients) {
+//        this.ingredients = ingredients;
+//    }
+
+    public Long getId() {
+        return id;
     }
 
-    public void setIngredients(List<String> ingredients) {
-        this.ingredients = ingredients;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

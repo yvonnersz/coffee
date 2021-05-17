@@ -160,10 +160,10 @@ public class CoffeeControllerTests {
         coffee.setPrice(5.25);
 
         when(coffeeService.getCoffee(anyString())).thenReturn(coffee);
-        when(coffeeService.updateCoffee(any(Coffee.class), anyString(), anyString())).thenReturn(coffee);
+        when(coffeeService.updateCoffee(anyString(), anyString())).thenReturn(coffee);
         mockMvc.perform(patch("/coffees/" + coffeeName)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+                .content("{\"price\": \"5.25\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("Cappuccino"))
                 .andExpect(jsonPath("price").value(5.25));
@@ -174,7 +174,7 @@ public class CoffeeControllerTests {
         Coffee coffee = coffees.get(0);
         String coffeeName = coffee.getName();
 
-        when(coffeeService.updateCoffee(any(Coffee.class), anyString(), anyString())).thenThrow(InvalidCoffeeInput.class);
+        when(coffeeService.updateCoffee(anyString(), anyString())).thenThrow(InvalidCoffeeInput.class);
         mockMvc.perform(patch("/coffees/" + coffeeName)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
@@ -199,7 +199,7 @@ public class CoffeeControllerTests {
         mockMvc.perform(delete("/coffees/" + coffee.getName()))
                 .andExpect(status().isAccepted());
 
-        verify(coffeeService).delete(coffee);
+        verify(coffeeService).delete(coffee.getName());
     }
 
     @Test

@@ -5,6 +5,8 @@ import java.util.List;
 public class CoffeeList {
     private List<Coffee> coffees;
 
+    public CoffeeList() {}
+
     public CoffeeList(List<Coffee> coffees) {
         this.coffees = coffees;
     }

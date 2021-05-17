@@ -54,12 +54,11 @@ public class CoffeeController {
 
     @PatchMapping("/coffees/{name}")
     public ResponseEntity<Coffee> updateCoffee(@PathVariable String name, @RequestBody UpdateCoffee request) {
-        Coffee coffee = coffeeService.getCoffee(name);
+        Coffee coffee = coffeeService.updateCoffee(name, request.getPrice());
 
         if (coffee == null) {
             return ResponseEntity.noContent().build();
         } else {
-            coffee = coffeeService.updateCoffee(coffee, request.getName(), request.getPrice());
             return ResponseEntity.ok(coffee);
         }
     }
@@ -69,7 +68,7 @@ public class CoffeeController {
         Coffee coffee = coffeeService.getCoffee(name);
 
         if (coffee != null) {
-            coffeeService.delete(coffee);
+            coffeeService.delete(name);
             return ResponseEntity.accepted().build();
         } else {
             return ResponseEntity.noContent().build();
