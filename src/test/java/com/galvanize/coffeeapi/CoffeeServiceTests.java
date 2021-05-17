@@ -12,8 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +60,7 @@ public class CoffeeServiceTests {
     void getCoffee_withNameAndDairy_returnsMatchingCoffees() {
         Coffee coffee = coffees.get(0);
 
-        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyString())).thenReturn(Arrays.asList(coffee));
+        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyBoolean())).thenReturn(Arrays.asList(coffee));
         CoffeeList actual = coffeeService.getCoffees(coffee.getName(), Boolean.toString(coffee.isDairy()));
 
         assertNotNull(actual);
@@ -71,7 +70,7 @@ public class CoffeeServiceTests {
 
     @Test
     void getCoffee_withNameAndDairy_returnsNoContent() {
-        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyString())).thenReturn(new ArrayList<>());
+        when(coffeeRepository.findByNameContainsAndDairyContains(anyString(), anyBoolean())).thenReturn(new ArrayList<>());
         CoffeeList actual = coffeeService.getCoffees("noMatchingCoffee", Boolean.toString(true));
 
         assertNotNull(actual);
