@@ -38,6 +38,10 @@ public class CoffeeService {
     }
 
     public void delete(Coffee coffee) {
-
+        if (coffee != null) {
+            coffeeRepository.delete(coffee);
+        } else {
+            throw new InvalidCoffeeInput();
+        }
     }
 }

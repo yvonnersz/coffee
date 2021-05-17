@@ -14,6 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -129,5 +130,20 @@ public class CoffeeServiceTests {
         Coffee actual = coffeeService.updateCoffee("noMatchingCoffee", "5.25");
 
         assertNull(actual);
+    }
+
+    @Test
+    void deleteCoffee_withCoffee_successful() {
+        Coffee coffee = coffees.get(0);
+        coffeeService.delete(coffee);
+
+        verify(coffeeRepository).delete(any(Coffee.class));
+    }
+
+    @Test
+    void deleteCoffee_withCoffee_unsuccessful() {
+        assertThrows(InvalidCoffeeInput.class, () -> {
+            coffeeService.delete(null);
+        });
     }
 }
