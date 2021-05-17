@@ -20,4 +20,8 @@ public class CoffeeService {
     public Coffee updateCoffee(Coffee coffee, String name, String price) {
         return null;
     }
+
+    public void delete(Coffee coffee) {
+
+    }
 }

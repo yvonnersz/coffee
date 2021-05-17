@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -187,6 +188,24 @@ public class CoffeeControllerTests {
         mockMvc.perform(patch("/coffees/noMatchingCoffee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Cappuccino\", \"price\": \"5.25\"}"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteCoffee_withCoffeeName_successfulRequest() throws Exception {
+        Coffee coffee = coffees.get(0);
+
+        when(coffeeService.getCoffee(anyString())).thenReturn(coffee);
+        mockMvc.perform(delete("/coffees/" + coffee.getName()))
+                .andExpect(status().isAccepted());
+
+        verify(coffeeService).delete(coffee);
+    }
+
+    @Test
+    void deleteCoffee_withCoffeeName_noContent() throws Exception {
+        when(coffeeService.getCoffee(anyString())).thenReturn(null);
+        mockMvc.perform(delete("/coffees/noMatchingCoffee"))
                 .andExpect(status().isNoContent());
     }
 }
