@@ -1,6 +1,15 @@
 package com.galvanize.coffeeapi;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CoffeeService {
+    private CoffeeRepository coffeeRepository;
+
+    public CoffeeService(CoffeeRepository coffeeRepository) {
+        this.coffeeRepository = coffeeRepository;
+    }
+
     public CoffeeList getCoffees() {
         return null;
     }
